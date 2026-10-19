@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Piano Maestro</title>
+<meta name="description" content="Impara a suonare il pianoforte: oltre 60 canzoni famose, una nota alla volta, con i suoni originali.">
+<meta name="theme-color" content="#0b0e1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Piano Maestro">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="screen active">
+  <header class="hero">
+    <div class="brand">
+      <img src="icon.svg" alt="" class="logo">
+      <div>
+        <h1>Piano <span>Maestro</span></h1>
+        <p class="tag">Impara una nota alla volta</p>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <button class="free-card" id="free-btn">
+    <span class="free-ico">🎹</span>
+    <span class="free-txt"><b>Suona libero</b><small>Tastiera completa e tutti gli strumenti</small></span>
+    <span class="chev">›</span>
+  </button>
+
+  <div class="search-row">
+    <input id="search" type="search" placeholder="Cerca una canzone o un artista…" autocomplete="off">
+  </div>
+  <nav class="chips" id="chips"></nav>
+  <div class="list" id="list"></div>
+  <footer class="foot">Melodie semplificate a scopo didattico · Suoni sintetizzati in tempo reale</footer>
+</section>
+
+<!-- ============ PLAYER ============ -->
+<section id="player" class="screen">
+  <header class="pbar">
+    <button class="icon-btn" id="back-btn" aria-label="Indietro">‹</button>
+    <div class="ptitle"><b id="p-title">Titolo</b><small id="p-artist">Artista</small></div>
+    <button class="ins-btn" id="ins-btn"><span id="ins-ico">🎹</span><span id="ins-name">Pianoforte</span></button>
+    <button class="icon-btn" id="set-btn" aria-label="Impostazioni">⚙</button>
+  </header>
+
+  <div class="modes" id="modes">
+    <button data-m="listen">🎧 <span>Ascolta</span></button>
+    <button data-m="learn" class="on">🎓 <span>Impara</span></button>
+    <button data-m="challenge">🏆 <span>Sfida</span></button>
+  </div>
+
+  <div class="lane" id="lane">
+    <canvas id="cv"></canvas>
+    <div class="progress"><i id="prog"></i></div>
+    <div class="hud" id="hud"></div>
+    <div class="combo" id="combo"></div>
+    <div class="overlay-start" id="start-ov">
+      <button class="big-play" id="play-btn" aria-label="Inizia">▶</button>
+      <p id="start-hint">Tocca ▶ e premi il tasto che si illumina</p>
+    </div>
+    <div class="controls" id="controls">
+      <button class="icon-btn sm" id="pause-btn" aria-label="Pausa">❚❚</button>
+      <button class="icon-btn sm" id="restart-btn" aria-label="Ricomincia">↺</button>
+    </div>
+    <div class="oct-nav" id="oct-nav">
+      <button class="icon-btn sm" id="oct-l" aria-label="Ottava giù">◀</button>
+      <button class="icon-btn sm" id="oct-r" aria-label="Ottava su">▶</button>
+    </div>
+  </div>
+
+  <div class="kbd-wrap" id="kbd-wrap">
+    <div class="kbd-felt"></div>
+    <div class="kbd-scroll" id="kbd-scroll"><div class="kbd" id="kbd"></div></div>
+  </div>
+  <div class="rotate-tip" id="rotate-tip">↻ Gira il telefono in orizzontale per una tastiera più grande</div>
+</section>
+
+<!-- ============ FINESTRE ============ -->
+<div class="modal" id="ins-modal">
+  <div class="sheet">
+    <div class="sheet-h"><b>Scegli lo strumento</b><button class="icon-btn sm" data-close>✕</button></div>
+    <div class="ins-grid" id="ins-grid"></div>
+  </div>
+</div>
+
+<div class="modal" id="set-modal">
+  <div class="sheet">
+    <div class="sheet-h"><b>Impostazioni</b><button class="icon-btn sm" data-close>✕</button></div>
+    <div class="set-row"><span>Velocità</span><div class="seg" id="speed-seg">
+      <button data-v="0.5">50%</button><button data-v="0.75">75%</button><button data-v="1">100%</button><button data-v="1.25">125%</button></div></div>
+    <div class="set-row"><span>Nomi delle note</span><div class="seg" id="label-seg">
+      <button data-v="it">DO RE MI</button><button data-v="en">C D E</button><button data-v="off">Nessuno</button></div></div>
+    <div class="set-row"><span>Volume</span><input type="range" id="vol" min="0" max="1" step="0.05"></div>
+    <div class="set-row"><span>Metronomo (Sfida)</span><div class="seg" id="metro-seg">
+      <button data-v="1">Sì</button><button data-v="0">No</button></div></div>
+  </div>
+</div>
+
+<div class="modal" id="res-modal">
+  <div class="sheet result">
+    <div class="res-stars" id="res-stars"></div>
+    <h2 id="res-title">Bravo!</h2>
+    <p id="res-text"></p>
+    <div class="res-grid" id="res-grid"></div>
+    <div class="res-actions">
+      <button class="btn ghost" id="res-again">↺ Riprova</button>
+      <button class="btn" id="res-next">Prossima ›</button>
+    </div>
+    <button class="btn link" id="res-list">Tutte le canzoni</button>
+  </div>
+</div>
+
+<script src="js/songs.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
